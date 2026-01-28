@@ -1,0 +1,65 @@
+services:
+  app:
+    image: wintercms/winter:latest
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DB_TYPE: ${DB_TYPE}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+    volumes:
+      - ./themes:/winter/themes
+      - ./plugins:/winter/plugins
+      - ./storage:/winter/storage
+    networks:
+      - app-net
+
+  db:
+    image: mariadb:10.5
+    command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-net
+
+  vite:
+    image: node:20-alpine
+    working_dir: /app
+    env_file:
+      - .env
+    command: sh -lc "cd ${VITE_WORKDIR} && npm ci && npm run dev -- --host 0.0.0.0 --port ${VITE_PORT}"
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+    volumes:
+      - ./:/app
+    depends_on:
+      - app
+    networks:
+      - app-net
+
+volumes:
+  db_data:
+
+networks:
+  app-net:
+    driver: bridge
