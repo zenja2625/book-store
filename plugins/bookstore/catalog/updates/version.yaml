@@ -1,0 +1,9 @@
+'1.0.0':
+    - 'First version of Catalog'
+'1.0.2':
+    - 'Initial database schema'
+    - CreateGenresTable.php
+    - CreatePublishersTable.php
+    - CreateBooksTable.php
+    - CreateDiscountsTable.php
+    - CreateDiscountTargetsTable.php
