@@ -57,6 +57,19 @@ services:
     networks:
       - app-net
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    depends_on:
+      - db
+    networks:
+      - app-net
+
+
 volumes:
   db_data:
 
