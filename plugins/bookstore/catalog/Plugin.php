@@ -6,6 +6,8 @@ use Backend\Facades\Backend;
 use Backend\Models\UserRole;
 use System\Classes\PluginBase;
 
+use Bookstore\Catalog\Console\ImportBooks;
+
 /**
  * Catalog Plugin Information File
  */
@@ -29,16 +31,16 @@ class Plugin extends PluginBase
      */
     public function register(): void
     {
-
+        $this->registerConsoleCommand(
+            'catalog.import-books',
+            ImportBooks::class
+        );
     }
 
     /**
      * Boot method, called right before the request route.
      */
-    public function boot(): void
-    {
-
-    }
+    public function boot(): void {}
 
     /**
      * Registers any frontend components implemented in this plugin.
