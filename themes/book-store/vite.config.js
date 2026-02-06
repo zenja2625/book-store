@@ -11,6 +11,9 @@ export default defineConfig({
     hmr: true
   },
 
+
+
+
   build: {
     outDir: 'dist',
     emptyOutDir: true,

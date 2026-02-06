@@ -1,0 +1,42 @@
+<header class="sticky-top"
+    style="">
+    <nav class="site-header navbar navbar-expand-lg position-relative navbar-dark">
+        <div class="container align-items-center">
+            <div class="col">
+                <a class="navbar-brand " href="#zxc">Book Store</a>
+            </div>
+            <div class="col collapse navbar-collapse">
+                <ul class="w-100 navbar-nav justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link {{ activeMenu == 'home' ? 'active' }}" href="/">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ activeMenu == 'catalog' ? 'active' }}" href="/catalog">Каталог</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <a href="cart.html" aria-label="Перейти в корзину"
+                    style="display:inline-flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);color:#f5efe8;text-decoration:none;">
+                    <div
+                        style="width:38px;height:38px;border-radius:14px;background:rgba(241,194,139,0.16);border:1px solid rgba(241,194,139,0.22);position:relative;display:grid;place-items:center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M7 7h14l-1.6 8.2a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.6L5.6 3H3" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="color:#f5efe8;" />
+                            <path
+                                d="M9.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm8 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
+                                fill="#f5efe8" />
+                        </svg>
+                        <span
+                            style="position:absolute;top:-7px;right:-7px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#C93B00;color:white;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 10px 18px rgba(0,0,0,0.30);">0</span>
+                    </div>
+                    <div style="display:grid;line-height:1.15;">
+                        <small style="font-size:12px;opacity:0.80;">В корзине</small>
+                        <strong style="font-size:14px;font-weight:800;">€0.00</strong>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>

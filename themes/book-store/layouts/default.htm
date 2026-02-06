@@ -1,0 +1,25 @@
+==
+<?php 
+function onStart()
+{
+    $this['activeMenu'] = $this->page->viewBag['section'] ?? null;
+}
+?>
+==
+<!DOCTYPE html>
+<html lang="en" class='h-100'>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>{{ this.page.title }}</title>
+    <script type="module" src="http://localhost:5173/src/main.js"></script>
+</head>
+<body class='d-flex flex-column' >
+    {% partial 'header' %}
+    <main class='flex-fill'>
+        {% page %}
+    </main>
+    {% partial 'footer' %}
+</body>
+</html>

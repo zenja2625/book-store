@@ -1,0 +1,18 @@
+==
+<?
+use Bookstore\Catalog\Models\Book;
+
+function onStart()
+{
+    $this['books'] = Book::where('is_featured', true)->paginate(5);
+}
+?>
+==
+<div>
+    {% for book in books %}
+        <h4>{{ book.name }}</h4>
+    {% endfor %}
+    <div>
+        {{ books.render()|raw }}
+    </div>
+</div>

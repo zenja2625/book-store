@@ -1,19 +1,18 @@
 title = "Main Page"
 url = "/"
+layout='default'
 is_hidden = 0
+
+[viewBag]
+section = "home"
 ==
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ this.page.title }}</title>
-    <script type="module" src="http://localhost:5173/src/main.js"></script>
-</head>
-<body class="d-flex justify-content-center align-items-center vh-100 flex-column">
-    {% for i in 1..6 %}
-        <h2>Item {{ i }}</h2>
-    {% endfor %}
-    <button class="btn btn-primary" onclick="alert('Click')">Click</button>
-</body>
-</html>
+<div class='container'>
+    {% partial 'section' 
+        title = 'Лучшие книги' 
+        content=(partial('home/featured-carousel')) 
+    %}
+    {% partial 'section' 
+        title = 'Категории' 
+        content=(partial('home/categories-grid')) 
+    %}
+</div>
