@@ -1,4 +1,6 @@
-import '../assets/styles/main.scss'
-import * as bootstrap from 'bootstrap'
+import "../assets/styles/main.scss"
+import * as bootstrap from "bootstrap"
 
-console.log('Vite connected')
+if (document.querySelector('[data-embla-root]')) {
+    import('./carousel')
+}

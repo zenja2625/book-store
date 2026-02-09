@@ -4,16 +4,17 @@ export default defineConfig({
   server: {
     host: true,          // важно для Docker/WSL
     port: 5173,
+    cors: true,
     strictPort: true,
     watch: {
       usePolling: true   // часто нужно в Docker/WSL, на mac/linux может работать и без
     },
-    hmr: true
+   hmr: {
+        // Указываем, чтобы HMR не терял соединение
+        host: typeof window !== 'undefined' ? window.location.hostname : 'localhost'
+    },
+   origin: 'http://192.168.1.104:5173', // ПРИНУДИТЕЛЬНО отправляет запросы на Vite
   },
-
-
-
-
   build: {
     outDir: 'dist',
     emptyOutDir: true,

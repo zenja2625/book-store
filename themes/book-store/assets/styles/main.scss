@@ -1,21 +1,34 @@
+@use "sass:map";
 @import "./variables";
+
 @import "bootstrap/scss/bootstrap";
 
-.site-header {
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.06),
-            rgba(255, 255, 255, 0)),
-        #2a211b;
+$bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
+@import "bootstrap-icons/font/bootstrap-icons";
 
-}
+@import './embla';
 
-.site-footer {
-    background: linear-gradient(0deg,
-            rgba(255, 255, 255, 0.06),
-            rgba(255, 255, 255, 0)),
-        #2a211b;
-}
 
 body {
     min-height: 100%;
+}
+
+.site-header {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.06),
+            rgba(255, 255, 255, 0)
+        ),
+        #2a211b;
+}
+
+.site-footer {
+    background:
+        linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.06),
+            rgba(255, 255, 255, 0)
+        ),
+        #2a211b;
 }

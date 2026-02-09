@@ -1,4 +1,6 @@
 <section>
-    <h2 class='text-center'>{{ title }}</h2>
+    {% if title != null %}
+        <h2 class='text-center py-4'>{{ title }}</h2>
+    {% endif %}
     {{ content|raw }}
 <section>
