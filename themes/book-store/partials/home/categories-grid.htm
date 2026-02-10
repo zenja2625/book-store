@@ -1,2 +1,18 @@
+==
+<?
+use Bookstore\Catalog\Models\Genre;
 
-<div>categories-grid</div>
+function onStart()
+{
+    $this['genres'] = Genre::get(['name', 'slug']);
+}
+
+?>
+==
+<nav aria-label="Жанры">
+    <ul class='row row-cols-1 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 g-2 justify-content-center list-unstyled mb-0'>
+        {% for genre in genres %}
+        <li class="col"><a href="{{ 'catalog'|page({ slug: genre.slug }) }}" class="btn btn-category btn-bounced w-100 fw-semibold">{{ genre.name }}</a></li>
+        {% endfor %}
+    </ul>
+</nav>
