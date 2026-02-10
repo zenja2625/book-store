@@ -1,0 +1,19 @@
+.btn-category {
+    --bs-btn-bg: #{$btn-category-background};
+    --bs-btn-border-color: #{$btn-category-border};
+
+    --bs-btn-hover-bg: #{darken($btn-category-background, 5%)}; 
+    --bs-btn-hover-border-color: #{darken($btn-category-border, 7%)};
+
+    --bs-btn-active-bg: #{$btn-category-background};
+    --bs-btn-active-border-color: #{$btn-category-border};
+    
+    transition: background-color 200ms ease-in-out, border-color 200ms ease-in-out;
+}
+
+.btn-bounced {
+    &:hover { transform: translateY(-1px); }
+    &:active { transform: translateY(0px); }
+
+    transition: transform 120ms ease;
+}
