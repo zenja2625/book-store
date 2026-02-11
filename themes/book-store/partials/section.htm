@@ -1,6 +1,7 @@
+{% set tag = 'h' ~ (level in [1,2,3,4,5,6] ? level : 2) %}
 <section>
     {% if title != null %}
-        <h2 class='text-center py-4'>{{ title }}</h2>
+        <{{ tag }} class='text-center'>{{ title }}</{{ tag }}>
     {% endif %}
     {{ content|raw }}
 <section>
