@@ -1,0 +1,8 @@
+<ul class="list-unstyled">
+    {% for genre in genres %}
+    <li class="mb-1">
+        <a class="btn w-100 {{ genre.slug == active ? 'btn-primary' : 'btn-category' }}"
+            href="{{ 'catalog'|page({ slug: genre.slug }) }}">{{ genre.name }}</a>
+    </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,19 @@
+==
+<?
+    function onStart()
+    {
+        $this['books'] = $this['current_genre']->books()->paginate(9);
+
+        \Illuminate\Pagination\Paginator::useBootstrap();
+
+    }
+?>
+==
+<div class='row row-cols-3 g-1 mb-3'>
+    {% for book in books %}
+    <div>
+    {% partial 'book' index=loop.index %}
+    </div>
+    {% endfor %}
+</div>
+<div class="d-flex justify-content-center">{{ books.render() | raw }}</div>

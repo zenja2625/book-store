@@ -6,4 +6,37 @@ is_hidden = 0
 [viewBag]
 section = "catalog"
 ==
-<div>Hello </div>
+<?
+    use Bookstore\Catalog\Models\Genre;
+    use Bookstore\Catalog\Models\Book;
+
+    function onStart()
+    {
+        $this['genres'] = Genre::orderBy('sort_order', 'asc')->get(['name', 'slug', 'id']);
+
+        $genre =  $this->param('slug') === null 
+            ? $this['genres']->first() 
+            : $this['genres']->firstWhere('slug', $this->param('slug'));
+
+        if ($genre === null) abort(404);
+
+        $this['current_genre'] = $genre;
+    }
+?>
+==
+{% set menu %}
+    {% partial 'catalog/menu' genres=genres active=current_genre.slug  %}
+{% endset %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3 ">
+            {% partial 'section' title = 'Жанры' level = 3 content = menu %}
+        </div>
+        <div class="col-9">
+            <section>
+            {% partial 'catalog/books' current_genre = current_genre %}
+            </section>
+        </div>
+    </div>
+</div>
