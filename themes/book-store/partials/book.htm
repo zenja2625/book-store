@@ -1,1 +1,31 @@
-<article style="height: 470px;  background-color:  coral; display: flex; align-items: center; justify-content: center;">{{ index }}</article>
+{% set firstimage %}
+<div class="ratio ratio-2x3">
+    <img src="https://kniga.lv/icache/2cf35b1e/78dc7608/704b4cb8.jpg" class="object-fit-cover">
+</div>
+{% endset %}
+{% set secondimage %}
+<div class="ratio ratio-2x3">
+    <img src="https://kniga.lv/icache/2cf35b1e/a9127c80/6af66e04.jpg" class="object-fit-cover">
+</div>
+{% endset %}
+<article class="d-flex flex-column h-100">
+    {% if index == 1 %}
+    {{ firstimage }}
+    {% elseif index == 5 %}
+    {{ secondimage }}
+    {% else %}
+    <div class="ratio ratio-2x3" style=" background-color: #F5E1CD;">
+        <div class="d-flex p-2">
+            <div class="border rounded-4 w-100 h-100 fs-5 fw-semibold d-flex justify-content-center align-items-center"
+                style='background-color: #faeee2;'>Cover</div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="fw-semibold ">{{ book.name }}</div>
+    <div class="small text-body-secondary">{{ book.author }}</div>
+
+    <div class="mt-auto pt-3">
+        <div class="fw-bold text-primary mb-1">€{{ book.price }}</div>
+        <a class="btn w-100 btn-primary ">В корзину</a>
+    </div>
+</article>

@@ -16,7 +16,7 @@ function onStart()
         <div class="embla-container">
             {% for book in books %}
             <div class="embla-slide">
-                {% partial 'book' index=loop.index0 %}
+                {% partial 'book' index=loop.index0 book=book %}
             </div>
             {% endfor %}
         </div>
