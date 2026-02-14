@@ -22,6 +22,8 @@ services:
       - ./themes:/winter/themes
       - ./plugins:/winter/plugins
       - ./storage:/winter/storage
+
+      - ./disable-opcache.ini:/usr/local/etc/php/conf.d/zz-disable-opcache.ini
     networks:
       - app-net
 
