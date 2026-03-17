@@ -1,0 +1,45 @@
+==
+<?php
+function onStart() {
+    $themePath = $this->theme->getPath() . '/assets';
+    $hotFile = $themePath . '/hot';
+    $this['isDev'] = file_exists($hotFile);
+
+    if ($this['isDev']) {
+        $url = rtrim(file_get_contents($hotFile));
+        
+        $this['viteServer'] = $url;
+    } else {
+        $manifestPath = $themePath . '/dist/manifest.json';
+
+        if (file_exists($manifestPath)) {
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+            $entry = $manifest['assets/src/js/app.js'] ?? null;
+            
+            if ($entry) {
+                $this['viteJs'] = 'assets/dist/' . $entry['file'];
+                
+                $cssArray = [];
+                if (isset($entry['css'])) {
+                    foreach ($entry['css'] as $css) {
+                        $cssArray[] = 'assets/dist/' . $css;
+                    }
+                }
+                $this['viteCss'] = $cssArray;
+            }
+        }
+    }
+}
+?>
+==
+{% if isDev %}
+    <script type="module" src="{{ viteServer }}/@vite/client"></script>
+    <script type="module" src="{{ viteServer }}/assets/src/js/app.js"></script>
+{% else %}
+    {% for css in viteCss %}
+        <link rel="stylesheet" href="{{ css | theme }}">
+    {% endfor %}
+    {% if viteJs %}
+        <script type="module" src="{{ viteJs | theme }}"></script>
+    {% endif %}
+{% endif %}

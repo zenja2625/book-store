@@ -1,0 +1,13 @@
+@import "_variables.scss";
+
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+@import './embla';
+@import './book-card';
+@import './cart_widget';
+
+
+body {
+    min-height: 100%;
+}

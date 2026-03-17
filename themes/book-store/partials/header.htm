@@ -1,0 +1,35 @@
+{% set centerClasses = 'position-absolute start-50 translate-middle-x' %}
+<header class="sticky-top">
+    <div class="navbar bg-dark-hf navbar-expand-lg py-3 position-relative" data-bs-theme="dark">
+        <div class="container-xxl d-flex justify-content-between align-items-center position-relative">
+            <button class="navbar-toggler d-lg-none border-0 p-0 " type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand m-0 d-none d-lg-block" href="{{ 'main'|page }}">
+                Book Store
+            </a>
+            <a class="navbar-brand m-0 d-lg-none {{ centerClasses }}" href="{{ 'main'|page }}">
+                Book Store
+            </a>
+            <div class="collapse navbar-collapse d-none d-lg-block {{ centerClasses }}">
+                {% partial 'header/nav' %}
+            </div>
+            <div id="cart-widget">
+                {% partial 'cart::cart' %}
+            </div>
+        </div>
+        <div class="offcanvas offcanvas-start bg-dark-hf d-lg-none" tabindex="-1" id="mobileMenu"
+            aria-labelledby="mobileMenuLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="mobileMenuLabel">Меню</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                {% partial 'header/nav' %}
+                {% partial 'genres' type='sidebar-menu' %}
+            </div>
+        </div>
+    </div>
+</header>

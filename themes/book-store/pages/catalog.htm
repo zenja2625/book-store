@@ -1,0 +1,51 @@
+title = "Каталог"
+url = "/catalog/:slug?"
+layout = "default"
+
+[collection genres]
+handle = "Catalog\Genre"
+
+[collection books]
+handle = "Catalog\Book"
+==
+{% if this.param.slug is empty %}
+    {% set genre = genres.first() %}
+{% else %}
+    {% set genre = genres.where('slug', this.param.slug).first() %}
+    {% if genre is empty %}
+        {% do abort(404) %}
+    {% endif %}
+{% endif %}
+
+{% set books = books.where('genre_id', genre.id).paginate(8) %}
+
+{% if books.isEmpty() %}
+    {% do abort(404) %}
+{% endif %}
+
+<div class="container-xxl">
+    <div class="row">
+        <div class="col-lg-4 d-none d-lg-flex">
+            {% partial 'section' title='Жанры' level=2 body %}
+                {% partial 'genres' type='menu' active_slug=genre.slug %}
+            {% endpartial %}
+        </div>
+        <div class="col-lg-8" >
+            {% partial 'section' title='Каталог книг' level=2 title_class='text-center' body %}
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+                    {% for book in books %}
+                        <div class="col">
+                            {% partial 'book' book=book %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-5 d-flex justify-content-center">
+                    {{ pager(books) }}
+                </div>
+            {% endpartial %}
+        </div>
+    </div>
+</div>
+
+

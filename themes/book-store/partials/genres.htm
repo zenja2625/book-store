@@ -1,0 +1,33 @@
+description = "Жанры"
+
+[collection genres]
+handle = "Catalog\Genre"
+==
+
+{% if type == 'tags' %}
+    {% set wrapper_class = 'd-flex flex-wrap justify-content-center gap-2' %}
+    {% set item_style = 'width: 240px;' %}
+{% elseif type == 'menu' %}
+    {% set wrapper_class = 'd-flex flex-column w-100 justify-content-center gap-2' %}
+{% elseif type == 'sidebar-menu' %}
+    {% set wrapper_class = 'navbar-nav ms-4' %}
+{% endif %}
+
+<ul class="{{ wrapper_class }} list-unstyled">
+    {% for genre in genres %}
+        {% set isActive = genre.slug == (active_slug is empty ? this.param.slug : active_slug) %}
+
+        {% set genre_class = 
+            type == 'tags' 
+                ? 'btn btn-secondary fw-bold rounded-0 border border-secondary-subtle' 
+                : type == 'menu'
+                    ? isActive ? 'btn btn-primary rounded-0 fw-bold' : 'btn btn-secondary fw-bold rounded-0 border border-secondary-subtle'
+                    : '' 
+        %}
+        <li class="nav-item {{ genre_class }}" style="{{ item_style }}">
+            <a href="{{ 'catalog'|page({ slug: genre.slug }) }}" class="nav-link {{ isActive ? 'active' }}" >
+                <span>{{ genre.title }}</span>
+            </a>
+        </li>
+    {% endfor %}
+</ul>

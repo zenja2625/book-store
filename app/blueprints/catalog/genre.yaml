@@ -1,0 +1,25 @@
+uuid: b4e1d404-9950-4ab1-b1aa-b65ccca28c7b
+handle: Catalog\Genre
+type: structure
+name: Genre
+
+structure:
+    maxDepth: 1
+
+navigation:
+    label: Genre
+    parent: Catalog\Book
+    icon: icon-magic
+    order: 15
+    
+fields:
+    meta_description:
+        label: Meta Description
+        type: textarea
+        span: full
+        
+    discounts:
+        type: entries
+        source: Catalog\Discount
+        inverse: genres
+        hidden: true

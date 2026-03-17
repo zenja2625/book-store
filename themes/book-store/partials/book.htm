@@ -1,0 +1,24 @@
+<div class="card h-100 border-0">
+  <div class="mb-3">
+    {% partial 'book-cover' book=book %}
+  </div>
+  <div class="card-body d-flex flex-column p-0">
+    <h5 class="card-title">
+      <a href="{{ 'book'|page({ slug: book.slug }) }}" class="text-reset text-decoration-none"> {{ book.title }} </a>
+    </h5>
+    <h6 class="card-subtitle mb-3 text-body-secondary">{{ book.author }}</h6>
+
+    <div class="mt-auto">
+      <div class="mb-3">
+        {% if book.current_price != book.price %}
+          <span class="text-decoration-line-through text-body-secondary me-2">{{ book.price|currency }}</span>
+          <span class="fw-bold text-primary fs-5">{{ book.current_price|currency }}</span>
+        {% else %}
+          <span class="fw-bold text-primary fs-5">{{ book.price|currency }}</span>
+        {% endif %}
+      </div>
+
+      <div id="add-book-{{ book.id }}">{% partial 'cart::book-button' id=book.id %}</div>
+    </div>
+  </div>
+</div>

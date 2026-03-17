@@ -1,0 +1,41 @@
+description = "Main Layout"
+
+[cart]
+==
+<!DOCTYPE html>
+<html class='h-100'>
+
+<head>
+    <meta charset="utf-8">
+    <title>{{ this.page.meta_title ?: this.page.title }}</title>
+    <meta name="title" content="{{ this.page.meta_title }}">
+    {% if this.page.meta_description %}
+    <meta name="description" content="{{ this.page.meta_description }}">
+    {% endif %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {% partial 'vite' %}
+    
+    <meta name="turbo-visit-control" content="enable" />
+    <meta name="turbo-prefetch" content="false">
+    <meta name="turbo-cache-control" content="no-cache">
+    
+    {% framework extras %}
+</head>
+
+<body class='d-flex flex-column'>
+    {% partial 'header' %}
+
+    <main class='flex-fill d-grid'>
+        <div class="container-xxl" style="min-width: 0;">
+            {% page %}
+        </div>
+    </main>
+
+    {% partial 'footer' %}
+
+</body>
+
+</html>

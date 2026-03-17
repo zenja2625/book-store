@@ -1,0 +1,75 @@
+url = "/book/:slug"
+meta_title = "{{ book.meta_title }}"
+meta_description = "{{ book.meta_description }}"
+layout = "default"
+title = "Книга"
+
+[section book]
+handle = "Catalog\Book"
+==
+{% if not book.exists %}
+    {% do abort(404) %}
+{% endif %}
+
+<div class="container-xxl mt-5">
+    <div class="row g-5">
+        <div class="col-12 col-md-4 col-lg-3">
+            {% partial 'book-cover' book=book %}
+        </div>
+        <div class="col-12 col-md-5 col-lg-6">
+            <h1 class="mb-2">{{ book.title }}</h1>
+            <h4 class="text-body-secondary mb-4">{{ book.author }}</h4>
+            
+            {% if book.description %}
+                <p class="mb-4">{{ book.description }}</p>
+            {% endif %}
+
+            <div class="row row-cols-1 row-cols-sm-2 g-3 mb-4">
+                {% if book.publisher %}
+                    <div class="col">
+                        <div class="text-body-secondary small">Издательство</div>
+                        <div>{{ book.publisher.title }}</div>
+                    </div>
+                {% endif %}
+                {% if book.publisher_year %}
+                    <div class="col">
+                        <div class="text-body-secondary small">Год издания</div>
+                        <div>{{ book.publisher_year }}</div>
+                    </div>
+                {% endif %}
+                {% if book.genre.count() > 0 %}
+                    <div class="col">
+                        <div class="text-body-secondary small">Жанр</div>
+                        <div>{{ book.genre.first().title }}</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-12 col-md-3 col-lg-3">
+            <div class="bg-surface p-4 border border-secondary mb-3">
+                <div class="mb-4">
+                    {% if book.current_price != book.price %}
+                        <div class="text-decoration-line-through text-body-secondary">{{ book.price|currency }}</div>
+                        <div class="fw-bold text-primary fs-3">{{ book.current_price|currency }}</div>
+                    {% else %}
+                        <div class="fw-bold text-primary fs-3">{{ book.price|currency }}</div>
+                    {% endif %}
+                </div>
+                
+                {% if book.stock_qty > 0 %}
+                    <div class="text-success small mb-3">
+                        <i class="bi bi-check-circle me-1"></i>В наличии: {{ book.stock_qty }}
+                    </div>
+                {% else %}
+                    <div class="text-danger small mb-3">
+                        <i class="bi bi-x-circle me-1"></i>Нет в наличии
+                    </div>
+                {% endif %}
+
+                <div id="add-book-{{ book.id }}">
+                    {% partial 'cart::book-button' id=book.id %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+title = "Корзина"
+url = "/cart"
+layout = "default"
+==
+<div class="container">
+    {% set cartBody %}
+        <div class="row g-4">
+            <div id="cart-items" class="col-12 col-lg-8">
+                {% partial 'cart::items' %}
+            </div>
+            <div id="cart-summary" class="col-12 col-lg-4">
+                {% partial 'cart::summary' %}
+            </div>
+        </div>
+    {% endset %}
+
+    {% partial 'section' 
+        title="Корзина" 
+        title_class="text-center" 
+        padding="py-4" 
+        level=1 
+        body=cartBody 
+    %}
+</div>

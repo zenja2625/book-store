@@ -1,0 +1,6 @@
+{% if id in __SELF__.cartMap|keys %}
+<a href="{{ 'cart'|page }}" class="btn btn-success fw-bold w-100 rounded-0">Оформить</a>
+{% else %}
+<button data-request="onAddToCart" data-attach-loading data-request-data="id: {{ id }}"
+    class="btn btn-primary fw-bold w-100 rounded-0">В корзину</button>
+{% endif %}

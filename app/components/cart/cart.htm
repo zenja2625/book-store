@@ -1,0 +1,12 @@
+<a class="nav-link p-0 link-light" href="{{ 'cart'|page }}" title="Корзина">
+    <div class="d-none d-lg-block">
+        <div class="d-flex align-items-center p-2 cart-widget rounded-4">
+            <div class="cart-icon p-2 rounded-4 me-2">{% partial '@cart-icon' %}</div>
+            <div class="lh-sm">
+                <div class="fs-7 text-body-secondary">В корзине</div>
+                <div class="small fw-bold">{{ __SELF__.cartSum|currency }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="d-lg-none pe-2">{% partial '@cart-icon' %}</div>
+</a>

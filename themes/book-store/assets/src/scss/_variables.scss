@@ -1,0 +1,39 @@
+$font-family-base:
+    "Inter",
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial,
+    "Noto Sans",
+    "Helvetica Neue",
+    sans-serif;
+
+$primary: #C93B00;
+$secondary: #f8e8d4;
+
+$navbar-toggler-focus-width: 0;
+$btn-close-focus-shadow: none;
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+$font-sizes: map-merge(
+  $font-sizes,
+  (
+    7: 0.75rem
+  )
+);
+
+$secondary-border-subtle: darken($secondary, 20%);
+
+$custom-colors: (
+  "dark-hf": #2a211b,
+  "surface": #fffaf3
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+$aspect-ratios: (
+  "2x3": 150%
+);

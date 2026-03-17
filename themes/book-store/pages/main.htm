@@ -1,0 +1,17 @@
+title = "Main Page"
+url = "/"
+layout = "default"
+
+[collection books]
+handle = "Catalog\Book"
+
+[collection discounts]
+handle = "Catalog\Discount"
+==
+{% partial 'section' title='Лучшие книги' level=2 title_class='text-center' body %}
+    {% partial 'main/carousel' %}
+{% endpartial %}
+
+{% partial 'section' title='Жанры' level=2 title_class='text-center' body %}
+    {% partial 'genres' type='tags' %}
+{% endpartial %}

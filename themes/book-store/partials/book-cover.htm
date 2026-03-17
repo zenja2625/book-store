@@ -1,0 +1,22 @@
+<div class="position-relative">
+  <a href="{{ 'book'|page({ slug: book.slug }) }}" class="d-block text-decoration-none link-dark">
+    <div class="ratio ratio-2x3 overflow-hidden">
+      {% if book.cover %}
+        <img
+          src="{{ book.cover|media }}"
+          class="object-fit-cover w-100 h-100 transition-transform"
+          alt="{{ book.title }}"
+        />
+      {% else %}
+        <div class="d-flex align-items-center justify-content-center bg-secondary bg-gradient transition-transform">
+          <i class="bi bi-book opacity-50" style="font-size: 5rem"></i>
+        </div>
+      {% endif %}
+    </div>
+  </a>
+  {% if book.discount_display %}
+    <div class="book-discount-badge position-absolute bg-primary text-white px-3 py-1 fw-bold shadow-sm">
+      -{{ book.discount_display }}%
+    </div>
+  {% endif %}
+</div>

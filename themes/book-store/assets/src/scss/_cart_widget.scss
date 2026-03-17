@@ -1,0 +1,11 @@
+.cart-widget {
+    background-color: rgba($secondary, 0.12);
+    border: 1px solid rgba($secondary, 0.18);
+
+    .cart-icon {
+        $icon-background: rgb(241, 194, 139);
+
+        background-color: rgba($icon-background, 0.12);
+        border: 1px solid rgba($icon-background, 0.18);
+    }
+}

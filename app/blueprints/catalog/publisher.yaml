@@ -1,0 +1,17 @@
+uuid: 4e599039-cc6d-4e8d-b05a-8fe1b547efc9
+handle: Catalog\Publisher
+type: entry
+name: Publisher
+
+navigation:
+    label: Publisher
+    parent: Catalog\Book
+    icon: icon-building
+    order: 20
+    
+fields:
+    discounts:
+        type: entries
+        source: Catalog\Discount
+        inverse: publishers
+        hidden: true

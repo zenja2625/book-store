@@ -1,0 +1,88 @@
+uuid: 660c4878-6193-4fc0-adee-7ac2ffa7b87a
+handle: Catalog\Discount
+type: stream
+name: Discount
+
+navigation:
+    label: Discount
+    parent: Catalog\Book
+    icon: icon-percent
+    duplicate: false
+    order: 15
+
+fields:
+    _discount_type:
+        type: text
+        disabled: true 
+        hidden: true
+    slug:
+        label: Code
+    publishers:
+        label: Издательства
+        type: entries
+        source: Catalog\Publisher
+        displayMode: taglist
+    genres:
+        label: Жанры
+        type: entries
+        source: Catalog\Genre
+        displayMode: taglist
+    books:
+        label: Книги
+        type: entries
+        source: Catalog\Book
+        displayMode: taglist
+
+groups:
+    percentage:
+        name: Процент от цены
+        fields:
+            discount_pct:
+                label: Процент скидки
+                type: number
+                span: left
+                order: 100
+                required: true
+                comment: Введите число от 1 до 100
+                validation: nullable|required_if:content_group,percentage|integer|between:1,100
+    fixed_amount:
+        name: Фиксированная сумма
+        fields:
+            discount_num:
+                label: Сумма скидки
+                type: currency
+                span: left
+                order: 100
+                required: true
+                comment: Введите точную сумму, например, 500
+                validation: nullable|required_if:content_group,fixed_amount|numeric|min:0
+columns:
+    entry_type_name: false
+    discount_num:
+        hidden: true
+    publishers:
+        hidden: true
+    genres:
+        hidden: true
+    books:
+        hidden: true
+    slug:
+        label: Code
+        invisible: true
+    _discount_type:
+        label: 'Тип скидки'
+        valueFrom: content_group
+        displayFrom: entry_type_name
+    discount_pct:
+        label: Скидка
+        select: coalesce(discount_pct, discount_num)
+        type: discount_smart
+
+scopes:
+    publishers:
+        label: Издательство
+    genres:
+        label: Жанр
+    books:
+        label: Книга
+

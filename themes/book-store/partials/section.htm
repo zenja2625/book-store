@@ -1,0 +1,10 @@
+description = "Секция"
+==
+<section class="{{ class }} {{ padding|default('pt-4') }} w-100">
+    {% if title %}
+        {% set level = max(1, min(6, level|default(2))) %}
+        <h{{ level }} class="section-title mb-3 {{ title_class|default('') }}">{{ title }}</h{{ level }}>
+    {% endif %}
+    {{ body|raw }}
+</section>
+

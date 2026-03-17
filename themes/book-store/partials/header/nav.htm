@@ -1,0 +1,11 @@
+{% set activeNavLink = activeNavLink|default(this.page.id) %}
+
+<ul class="navbar-nav mb-2 mb-lg-0 gap-3">
+    <li class="nav-item">
+        <a class="nav-link {{ activeNavLink == 'main' ? 'active' }}" href="{{ 'main'|page }}">Главная</a>
+    </li>
+    <hr class="d-lg-none my-0 border-light border-opacity-50">
+    <li class="nav-item">
+        <a class="nav-link {{ activeNavLink == 'catalog' ? 'active' }}" href="{{ 'catalog'|page({ slug: null }) }}">Каталог</a>
+    </li>
+</ul>

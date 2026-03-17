@@ -1,0 +1,7 @@
+/storage
+node_modules/
+**/hot
+.env
+plugins/responsiv/currency
+/.agents
+dist/

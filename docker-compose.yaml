@@ -1,0 +1,84 @@
+services:
+  db:
+    image: postgres:17
+    env_file: 
+      - .env
+    environment:
+      # В Postgres переменные называются иначе, чем в MariaDB
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: 
+      - app-net
+      
+  app:
+    image: my-october-base:v1
+    build: .
+    pull_policy: never
+    env_file:
+      - .env
+    ports:
+      - "8080:80"
+    environment:
+      COMPOSER_HOME: /var/www/html/.composer
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      APP_ENV: ${APP_ENV}
+      APP_NAME: ${APP_NAME}
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      APP_KEY: ${APP_KEY}
+    # user: "www-data:www-data"
+    volumes:
+      - ./app:/var/www/html/app
+      - ./themes:/var/www/html/themes
+      - ./plugins:/var/www/html/plugins
+      - ./storage:/var/www/html/storage
+    depends_on:
+      - db
+    networks:
+      - app-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports: 
+      - "8000:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    depends_on: 
+      - db
+    networks: 
+      - app-net
+
+  vite:
+    image: node:20-alpine
+    # Указываем путь сразу к теме, чтобы не делать cd в command
+    working_dir: ${VITE_WORKDIR}
+    env_file:
+      - .env
+    environment:
+      VITE_HMR_HOST: ${VITE_HMR_HOST}
+    # Упрощаем команду. npm install (или ci) выполнится в контексте темы.
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port ${VITE_PORT}"
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+    volumes:
+      - .:/app
+    depends_on:
+      - app
+    networks:
+      - app-net
+
+volumes:
+  pgdata:
+
+networks:
+  app-net:
+    driver: bridge

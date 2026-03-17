@@ -1,0 +1,101 @@
+uuid: 7a686214-0844-4c6a-94b4-114f2f3d4c69
+handle: Catalog\Book
+type: entry
+name: Book
+drafts: true
+
+primaryNavigation:
+    label: Catalog
+    icon: icon-magic
+    order: 94
+
+navigation:
+    label: Book
+    icon: icon-book
+    order: 10
+
+fields:
+    is_featured:
+        label: Featured
+        type: switch
+        span: full
+    author:
+        label: Author
+        type: text
+        span: left
+        validation: required
+    publisher_year:
+        label: Year Published
+        type: number
+        span: right
+        validation: required|integer|between:1900,2100
+    genre:
+        label: Genre
+        type: entries
+        source: Catalog\Genre
+        maxItems: 1
+        placeholder: Select Genre
+        allowCreate: true
+        displayMode: relation
+        span: left
+        validation: required
+    publisher:
+        label: Publisher
+        type: entries
+        source: Catalog\Publisher
+        maxItems: 1
+        placeholder: Select Publisher
+        displayMode: relation
+        span: right
+        validation: required
+        
+    cover:
+        label: Cover
+        type: mediafinder
+        mode: image
+        maxItems: 1
+        span: left
+    description:
+        label: Description
+        type: textarea
+    price:
+        label: Price
+        type: currency
+        span: row
+        default: 0
+        spanClass: col-2
+        step: 0.01
+        validation: required|numeric|min:0.01
+    stock_qty:
+        label: Stock Quantity
+        type: number
+        span: row
+        spanClass: col-2
+        default: 0
+        validation: required|integer|min:0
+        
+    meta_title:
+        label: Meta Title
+        type: text
+        tab: SEO
+    meta_description:
+        label: Meta Description
+        type: textarea
+        tab: SEO
+    
+    discounts:
+        type: entries
+        source: Catalog\Discount
+        inverse: books
+        hidden: true
+    
+    current_price:
+        type: currency
+        hidden: true
+        column: 
+            label: 'Цена со скидкой'  
+    discount_display:
+        type: number
+        hidden: true
+        column: 
+            label: 'Скидка'
