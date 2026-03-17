@@ -19,4 +19,9 @@ fi
 # Всегда проверяем права перед стартом (особенно важно для storage)
 chown -R www-data:www-data storage themes plugins app
 
+if [ "$RUN_MIGRATIONS" = "true" ]; then
+    echo "Running migrations..."
+    php artisan october:migrate
+fi
+
 exec "$@"
