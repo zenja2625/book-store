@@ -22,12 +22,13 @@ mkdir -p storage/framework/cache/data \
 
 echo "Fixing permissions..."
 
-chown -R www-data:www-data /var/www/html/storage
-chown -R www-data:www-data /var/www/html/bootstrap/cache
+chown -R www-data:www-data /var/www/html
 
-# 4. Выставляем права 775 или 777
-chmod -R 777 /var/www/html/storage
-chmod -R 777 /var/www/html/bootstrap/cache
+# Выставляем права 775 (этого достаточно, если владелец www-data)
+chmod -R 775 /var/www/html/storage
+chmod -R 775 /var/www/html/bootstrap/cache
+
+su -s /bin/bash -c "php artisan cache:clear" www-data
 
 echo "Storage is ready."
 
