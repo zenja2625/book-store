@@ -1,0 +1,32 @@
+{
+  "assets/src/js/app.js": {
+    "file": "assets/app-BAoJwwYL.js",
+    "name": "app",
+    "src": "assets/src/js/app.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "assets/src/js/carousel.js"
+    ],
+    "css": [
+      "assets/app-B8ZJnCF7.css"
+    ],
+    "assets": [
+      "assets/bootstrap-icons-mSm7cUeB.woff2",
+      "assets/bootstrap-icons-BeopsB42.woff"
+    ]
+  },
+  "assets/src/js/carousel.js": {
+    "file": "assets/carousel-DmjhiU_l.js",
+    "name": "carousel",
+    "src": "assets/src/js/carousel.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff": {
+    "file": "assets/bootstrap-icons-BeopsB42.woff",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff"
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2": {
+    "file": "assets/bootstrap-icons-mSm7cUeB.woff2",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
+  }
+}

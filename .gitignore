@@ -4,4 +4,4 @@ node_modules/
 .env
 plugins/responsiv/currency
 /.agents
-dist/
+# dist/
