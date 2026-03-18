@@ -19,14 +19,15 @@ mkdir -p storage/framework/cache/data \
          storage/logs \
          storage/temp
 
-# 3. ФИКС ПРАВ (Самый важный этап)
 echo "Fixing permissions..."
-# Делаем www-data владельцем всего
-chown -R www-data:www-data /var/www/html
+# Даем права 777 рекурсивно. 
+# На Render это безопасно, так как контейнер изолирован.
+chmod -R 777 storage
 
-# Даем права на запись (775 позволяет и владельцу, и группе писать в папки)
-find /var/www/html/storage -type d -exec chmod 775 {} \;
-find /var/www/html/storage -type f -exec chmod 664 {} \;
+# Явно меняем владельца на пользователя, от которого работает Apache
+chown -R www-data:www-data storage
+
+echo "Storage is ready."
 
 if [ "$RUN_MIGRATIONS" = "true" ]; then
     echo "Running migrations..."
