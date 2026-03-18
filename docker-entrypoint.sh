@@ -17,7 +17,8 @@ mkdir -p storage/framework/cache/data \
          storage/cms/combiner \
          storage/cms/twig \
          storage/logs \
-         storage/temp
+         storage/temp \
+         bootstrap/cache
 
 echo "Fixing permissions..."
 
