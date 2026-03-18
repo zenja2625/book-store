@@ -20,12 +20,13 @@ mkdir -p storage/framework/cache/data \
          storage/temp
 
 echo "Fixing permissions..."
-# Даем права 777 рекурсивно. 
-# На Render это безопасно, так как контейнер изолирован.
-chmod -R 777 storage
 
-# Явно меняем владельца на пользователя, от которого работает Apache
-chown -R www-data:www-data storage
+chown -R www-data:www-data /var/www/html/storage
+chown -R www-data:www-data /var/www/html/bootstrap/cache
+
+# 4. Выставляем права 775 или 777
+chmod -R 777 /var/www/html/storage
+chmod -R 777 /var/www/html/bootstrap/cache
 
 echo "Storage is ready."
 
