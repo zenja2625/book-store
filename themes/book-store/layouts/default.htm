@@ -17,11 +17,13 @@ description = "Main Layout"
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     {% partial 'vite' %}
-    
+
     <meta name="turbo-visit-control" content="enable" />
     <meta name="turbo-prefetch" content="false">
     <meta name="turbo-cache-control" content="no-cache">
-    
+
+    <meta name="ajax-request-update" content="{ 'flash-messages': '#toast-container' }" />
+
     {% framework extras %}
 </head>
 
@@ -34,8 +36,9 @@ description = "Main Layout"
         </div>
     </main>
 
-    {% partial 'footer' %}
-
+    <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+        {% partial 'flash-messages' %}
+    </div>
 </body>
 
 </html>
