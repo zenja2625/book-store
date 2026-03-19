@@ -11,3 +11,12 @@
 body {
     min-height: 100%;
 }
+
+.hide-text-on-load.jax-attach-loader {
+    .btn-text {
+        display: none !important;
+    }
+    &::after {
+        margin-left: 0 !important;
+    }
+}
