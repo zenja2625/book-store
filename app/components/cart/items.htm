@@ -24,7 +24,7 @@
                     data-attach-loading data-request-data="id: {{ book.id }}" {% if book.qty <=1 %}disabled{% endif %}>-</button>
                 <span class="btn btn-primary rounded-0 fw-bold pe-none">{{ book.qty }}</span>
                 <button type="button" class="btn btn-primary fw-bold rounded-0" data-request="onAddToCart"
-                    data-attach-loading data-request-data="id: {{ book.id }}">+</button>
+                    data-attach-loading data-request-data="id: {{ book.id }}" {% if book.qty >= book.stock_qty %}disabled{% endif %}>+</button>
             </div>
 
             <button type="button" class="btn btn-primary rounded-0" data-request="onRemoveFromCart" data-attach-loading

@@ -40,9 +40,23 @@ class Cart extends ComponentBase
 
         if (!$this->isValidId($id)) return;
 
-        if (!EntryRecord::inSection('Catalog\Book')->where('id', $id)->exists()) return;
+        $book = EntryRecord::inSection('Catalog\Book')
+            ->where('id', $id)
+            ->first(['id', 'title', 'stock_qty']);
+
+        if (!$book) return;
 
         $quantity = $this->cartMap[$id] ?? 0;
+
+        if (($quantity + 1) > $book->stock_qty) {
+            \Flash::error("Нельзя добавить ещё книгу «{$book->title}»");
+            return $this->updateCart();
+        }
+
+        if ($quantity === 0 && $this->page->id !== 'cart') {
+            \Flash::success("Книга «{$book->title}» добавлена в корзину");
+        }
+
         $this->cartMap[$id] = $quantity + 1;
 
         return $this->updateCart();
