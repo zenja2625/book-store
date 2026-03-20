@@ -45,13 +45,19 @@ class DiscountModelListener
                 );
             });
         });
+
+        $model->bindEvent('model.afterRestore', function () use ($model) {
+            App::terminating(function () use ($model) {
+                [$book_ids, $genre_ids, $publisher_ids] = self::getCurrentRelationIds($model);
+
+                self::updateBooksPrices($model, $book_ids, $genre_ids, $publisher_ids);
+            });
+        });
     }
 
     private static function captureOriginalRelationIds($model): void
     {
-        $model->original_book_ids = $model->books()->pluck('id');
-        $model->original_genre_ids = $model->genres()->pluck('id');
-        $model->original_publisher_ids = $model->publishers()->pluck('id');
+        [$model->original_book_ids, $model->original_genre_ids, $model->original_publisher_ids] = self::getCurrentRelationIds($model);
     }
 
     private static function updateBooksPrices($model, $book_ids, $genre_ids, $publisher_ids): void
@@ -79,9 +85,7 @@ class DiscountModelListener
     private static function getAffectedRelationIds($model): array
     {
         if ($model->wasRecentlyCreated) {
-            $book_ids = $model->books()->pluck('id');
-            $genre_ids = $model->genres()->pluck('id');
-            $publisher_ids = $model->publishers()->pluck('id');
+            [$book_ids, $genre_ids, $publisher_ids] = self::getCurrentRelationIds($model);
         } elseif ($model->wasChanged(['discount_pct', 'discount_num', 'content_group'])) {
             $book_ids = $model->books()->pluck('id')->merge($model->original_book_ids)->unique();
             $genre_ids = $model->genres()->pluck('id')->merge($model->original_genre_ids)->unique();
@@ -99,5 +103,14 @@ class DiscountModelListener
         }
 
         return [$book_ids, $genre_ids, $publisher_ids];
+    }
+
+    private static function getCurrentRelationIds($model): array
+    {
+        return [
+            $model->books()->pluck('id'),
+            $model->genres()->pluck('id'),
+            $model->publishers()->pluck('id')
+        ];
     }
 }
