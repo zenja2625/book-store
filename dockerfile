@@ -57,7 +57,6 @@ RUN composer create-project october/october . --no-scripts --no-interaction --ig
 
 # Копируем ваш код в кэш (для Render)
 COPY app ./app
-COPY plugins ./plugins
 COPY themes ./themes
 
 RUN chown -R www-data:www-data /usr/src/october
@@ -67,7 +66,6 @@ WORKDIR /var/www/html
 
 # Копируем ваш код в рабочую директорию
 COPY app ./app
-COPY plugins ./plugins
 COPY themes ./themes
 
 # 7. Фикс прав
