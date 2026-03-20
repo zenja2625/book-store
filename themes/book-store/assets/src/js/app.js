@@ -1,6 +1,5 @@
 import '../scss/app.scss'
-import { Toast } from 'bootstrap';
-
+import { Toast } from  'bootstrap';
 
 const initFlashToasts = () => {
     const toastElements = document.querySelectorAll('.js-toast:not(.show)');
