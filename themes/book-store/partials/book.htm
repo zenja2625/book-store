@@ -9,16 +9,19 @@
     <h6 class="card-subtitle mb-3 text-body-secondary">{{ book.author }}</h6>
 
     <div class="mt-auto">
-      <div class="mb-3">
-        {% if book.current_price != book.price %}
-          <span class="text-decoration-line-through text-body-secondary me-2">{{ book.price|currency }}</span>
-          <span class="fw-bold text-primary fs-6">{{ book.current_price|currency }}</span>
-        {% else %}
-          <span class="fw-bold text-primary fs-6">{{ book.price|currency }}</span>
-        {% endif %}
-      </div>
 
-      <div id="add-book-{{ book.id }}">{% partial 'cart::book-button' id=book.id is_out_of_stock=(book.stock_qty == 0) %}</div>
-    </div>
+  <div class="mb-3 d-flex flex-column flex-md-row align-items-md-center">
+    {% if book.current_price != book.price %}
+      <span class="text-decoration-line-through text-body-secondary me-md-2">{{ book.price|currency }}</span>
+      <span class="fw-bold text-primary fs-6 text-nowrap">{{ book.current_price|currency }}</span>
+    {% else %}
+      <span class="fw-bold text-primary fs-6 text-nowrap">{{ book.price|currency }}</span>
+    {% endif %}
+  </div>
+
+  <div id="add-book-{{ book.id }}">
+    {% partial 'cart::book-button' id=book.id is_out_of_stock=(book.stock_qty == 0) %}
+  </div>
+</div>
   </div>
 </div>
