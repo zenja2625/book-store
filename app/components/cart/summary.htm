@@ -1,5 +1,5 @@
 <div class="bg-surface p-4 border border-secondary">
     <h5 class="mb-3">Итого</h5>
-    <p class="fs-4 fw-bold mb-4">Сумма заказа: {{ __SELF__.cartSum|currency }}</p>
+    <p class="fs-4 fw-bold mb-4">Сумма заказа: {{ __SELF__.cart_sum|currency }}</p>
     <button type="button" class="btn btn-primary rounded-0 w-100" {% if __SELF__.cartMap|length == 0 %}disabled{% endif %}>Оформить заказ</button>
 </div>
