@@ -20,82 +20,84 @@ class DiscountModelListener
 
         $model->bindEvent('model.afterSave', function () use ($model) {
             if ($model->wasRecentlyCreated === false) {
-                $model->old_books = $model->books()->pluck('id');
-                $model->old_genres = $model->genres()->pluck('id');
-                $model->old_publishers = $model->publishers()->pluck('id');
+                self::captureOriginalRelationIds($model);
             }
 
             App::terminating(function () use ($model) {
-                $repo = App::make(\App\Repositories\DiscountRepository::class);
 
-                if ($model->wasRecentlyCreated) {
-                    $bookIds = $model->books()->pluck('id');
-                    $genreIds = $model->genres()->pluck('id');
-                    $publisherIds = $model->publishers()->pluck('id');
-                } elseif ($model->wasChanged('discount_pct') || $model->wasChanged('discount_num') || $model->wasChanged('content_group')) {
-                    $bookIds = $model->books()->pluck('id')->merge($model->old_books)->unique();
-                    $genreIds = $model->genres()->pluck('id')->merge($model->old_genres)->unique();
-                    $publisherIds = $model->publishers()->pluck('id')->merge($model->old_publishers)->unique();
-                } else {
-                    $getChangedRelationIds = fn($newIds, $oldIds) => $newIds
-                        ->diff($oldIds)
-                        ->merge($oldIds->diff($newIds))
-                        ->unique()
-                        ->values();
+                [$book_ids, $genre_ids, $publisher_ids] = self::getAffectedRelationIds($model);
 
-                    $bookIds = $getChangedRelationIds($model->books()->pluck('id'), $model->old_books);
-                    $genreIds = $getChangedRelationIds($model->genres()->pluck('id'), $model->old_genres);
-                    $publisherIds = $getChangedRelationIds($model->publishers()->pluck('id'), $model->old_publishers);
-                }
-
-                if ($bookIds->isEmpty() && $genreIds->isEmpty() && $publisherIds->isEmpty())
-                    return;
-
-                $affectedBooks = $repo->getAffectedBooksWithDiscounts($model, $bookIds, $genreIds, $publisherIds);
-
-                $priceService = App::make(PriceService::class);
-                foreach ($affectedBooks as $book) {
-                    $offer = $priceService->calculateBestOffer($book->price, $book);
-
-                    if ($book->current_price != $offer['price'] || $book->discount_display != $offer['percent']) {
-                        $book->current_price = $offer['price'];
-                        $book->discount_display = $offer['percent'];
-                        $book->saveQuietly();
-                    }
-                }
+                self::updateBooksPrices($model, $book_ids, $genre_ids, $publisher_ids);
             });
         });
 
         $model->bindEvent('model.beforeDelete', function () use ($model) {
-            $repo = App::make(\App\Repositories\DiscountRepository::class);
-            $model->books_to_update_on_delete = $repo->getAffectedBooksWithDiscounts(
-                $model,
-                $model->books()->pluck('id'),
-                $model->genres()->pluck('id'),
-                $model->publishers()->pluck('id')
-            );
+            self::captureOriginalRelationIds($model);
         });
 
         $model->bindEvent('model.afterDelete', function () use ($model) {
             App::terminating(function () use ($model) {
-                if (empty($model->books_to_update_on_delete)) {
-                    return;
-                }
-
-                $repo = App::make(\App\Repositories\DiscountRepository::class);
-                $priceService = App::make(PriceService::class);
-
-                foreach ($model->books_to_update_on_delete as $book) {
-                    $discounts = $repo->getBestDiscountForBook($book->id, $book->genre_id, $book->publisher_id);
-                    $offer = $priceService->calculateBestOffer($book->price, $discounts);
-
-                    if ($book->current_price != $offer['price'] || $book->discount_display != $offer['percent']) {
-                        $book->current_price = $offer['price'];
-                        $book->discount_display = $offer['percent'];
-                        $book->saveQuietly();
-                    }
-                }
+                self::updateBooksPrices(
+                    $model,
+                    $model->original_book_ids,
+                    $model->original_genre_ids,
+                    $model->original_publisher_ids
+                );
             });
         });
+    }
+
+    private static function captureOriginalRelationIds($model): void
+    {
+        $model->original_book_ids = $model->books()->pluck('id');
+        $model->original_genre_ids = $model->genres()->pluck('id');
+        $model->original_publisher_ids = $model->publishers()->pluck('id');
+    }
+
+    private static function updateBooksPrices($model, $book_ids, $genre_ids, $publisher_ids): void
+    {
+        if ($book_ids->isEmpty() && $genre_ids->isEmpty() && $publisher_ids->isEmpty()) {
+            return;
+        }
+
+        $repo = App::make(\App\Repositories\DiscountRepository::class);
+        $priceService = App::make(PriceService::class);
+
+        $affectedBooks = $repo->getAffectedBooksWithDiscounts($model, $book_ids, $genre_ids, $publisher_ids);
+
+        foreach ($affectedBooks as $book) {
+            $offer = $priceService->calculateBestOffer($book->price, $book);
+
+            if ($book->current_price != $offer['price'] || $book->discount_display != $offer['percent']) {
+                $book->current_price = $offer['price'];
+                $book->discount_display = $offer['percent'];
+                $book->saveQuietly();
+            }
+        }
+    }
+
+    private static function getAffectedRelationIds($model): array
+    {
+        if ($model->wasRecentlyCreated) {
+            $book_ids = $model->books()->pluck('id');
+            $genre_ids = $model->genres()->pluck('id');
+            $publisher_ids = $model->publishers()->pluck('id');
+        } elseif ($model->wasChanged(['discount_pct', 'discount_num', 'content_group'])) {
+            $book_ids = $model->books()->pluck('id')->merge($model->original_book_ids)->unique();
+            $genre_ids = $model->genres()->pluck('id')->merge($model->original_genre_ids)->unique();
+            $publisher_ids = $model->publishers()->pluck('id')->merge($model->original_publisher_ids)->unique();
+        } else {
+            $getChangedRelationIds = fn($newIds, $oldIds) => $newIds
+                ->diff($oldIds)
+                ->merge($oldIds->diff($newIds))
+                ->unique()
+                ->values();
+
+            $book_ids = $getChangedRelationIds($model->books()->pluck('id'), $model->original_book_ids);
+            $genre_ids = $getChangedRelationIds($model->genres()->pluck('id'), $model->original_genre_ids);
+            $publisher_ids = $getChangedRelationIds($model->publishers()->pluck('id'), $model->original_publisher_ids);
+        }
+
+        return [$book_ids, $genre_ids, $publisher_ids];
     }
 }
