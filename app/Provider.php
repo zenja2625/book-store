@@ -63,14 +63,7 @@ class Provider extends AppBase
     {
         parent::boot();
 
-
-        StreamRecord::extendInSection('Catalog\Discount', function ($model) {
-            \App\Listeners\DiscountModelListener::extend($model);
-        });
-
-
-        EntryRecord::extendInSection('Catalog\Book', function ($model) {
-            \App\Listeners\BookModelListener::extend($model);
-        });
+        StreamRecord::extendInSection('Catalog\Discount', fn($model) => \App\Listeners\DiscountModelListener::extend($model));
+        EntryRecord::extendInSection('Catalog\Book', fn($model) => \App\Listeners\BookModelListener::extend($model));
     }
 }

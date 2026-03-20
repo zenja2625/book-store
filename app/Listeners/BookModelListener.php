@@ -12,12 +12,11 @@ class BookModelListener
         $model->bindEvent('model.beforeSave', function () use ($model) {
             if ($model->isDirty('price') || $model->isDirty('genre_id') || $model->isDirty('publisher_id')) {
 
-                $repo = App::make(\App\Repositories\DiscountRepository::class);
-                $discounts = $repo->getBestDiscountForBook($model->id, $model->genre_id, $model->publisher_id);
+                $discount_repository = App::make(\App\Repositories\DiscountRepository::class);
+                $discounts = $discount_repository->getBestDiscountForBook($model->id, $model->genre_id, $model->publisher_id);
 
-
-                $priceService = App::make(PriceService::class);
-                $offer = $priceService->calculateBestOffer($model->price, $discounts);
+                $price_service = App::make(PriceService::class);
+                $offer = $price_service->calculateBestOffer($model->price, $discounts);
 
                 $model->current_price = $offer['price'];
                 $model->discount_display = $offer['percent'];

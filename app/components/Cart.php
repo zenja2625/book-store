@@ -10,8 +10,8 @@ class Cart extends ComponentBase
 {
     private const FILTER_OPTIONS = ["options" => ["min_range" => 1]];
 
-    public $cartMap;
-    public $cartSum;
+    public $cart_map;
+    public $cart_sum;
     public $books;
 
     public function componentDetails()
@@ -26,7 +26,7 @@ class Cart extends ComponentBase
     {
         $raw = Cookie::get('cart', []);
         $parsed = \is_string($raw) ? \json_decode($raw, true) : $raw;
-        $this->cartMap = \is_array($parsed) ? $parsed : [];
+        $this->cart_map = \is_array($parsed) ? $parsed : [];
     }
 
     public function onRun()
@@ -46,7 +46,7 @@ class Cart extends ComponentBase
 
         if (!$book) return;
 
-        $quantity = $this->cartMap[$id] ?? 0;
+        $quantity = $this->cart_map[$id] ?? 0;
 
         if (($quantity + 1) > $book->stock_qty) {
             \Flash::error("Нельзя добавить ещё книгу «{$book->title}»");
@@ -57,7 +57,7 @@ class Cart extends ComponentBase
             \Flash::success("Книга «{$book->title}» добавлена в корзину");
         }
 
-        $this->cartMap[$id] = $quantity + 1;
+        $this->cart_map[$id] = $quantity + 1;
 
         return $this->updateCart();
     }
@@ -68,9 +68,9 @@ class Cart extends ComponentBase
 
         if (!$this->isValidId($id)) return;
 
-        $quantity = $this->cartMap[$id] ?? 0;
+        $quantity = $this->cart_map[$id] ?? 0;
         if ($quantity > 1) {
-            $this->cartMap[$id] = $quantity - 1;
+            $this->cart_map[$id] = $quantity - 1;
         }
 
         return $this->updateCart();
@@ -82,8 +82,8 @@ class Cart extends ComponentBase
 
         if (!$this->isValidId($id)) return;
 
-        if (isset($this->cartMap[$id])) {
-            unset($this->cartMap[$id]);
+        if (isset($this->cart_map[$id])) {
+            unset($this->cart_map[$id]);
         }
 
         return $this->updateCart();
@@ -92,7 +92,7 @@ class Cart extends ComponentBase
     private function updateCart()
     {
         $this->prepareVars();
-        Cookie::queue('cart', \json_encode($this->cartMap), 60 * 24 * 30);
+        Cookie::queue('cart', \json_encode($this->cart_map), 60 * 24 * 30);
 
         $response = [
             "#cart-widget" => $this->renderPartial('@cart'),
@@ -124,11 +124,11 @@ class Cart extends ComponentBase
 
     private function prepareVars()
     {
-        $ids = array_keys($this->cartMap);
+        $ids = array_keys($this->cart_map);
 
         if (\count($ids) === 0) {
             $this->books = [];
-            $this->cartSum = 0;
+            $this->cart_sum = 0;
             return;
         }
 
@@ -136,8 +136,8 @@ class Cart extends ComponentBase
             ->whereIn('id', $ids)
             ->get();
 
-        $this->cartSum = $books->reduce(function ($carry, $book) {
-            $quantity = $this->cartMap[$book->id] ?? 0;
+        $this->cart_sum = $books->reduce(function ($carry, $book) {
+            $quantity = $this->cart_map[$book->id] ?? 0;
 
             return $carry + ($book->current_price * $quantity);
         }, 0);
@@ -145,7 +145,7 @@ class Cart extends ComponentBase
 
         if ($this->page->id === 'cart') {
             foreach ($books as $book) {
-                $book->qty = $this->cartMap[$book->id];
+                $book->qty = $this->cart_map[$book->id];
             }
 
             $this->books = $books;

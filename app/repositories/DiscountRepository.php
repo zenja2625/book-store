@@ -7,14 +7,14 @@ use Tailor\Models\EntryRecord;
 
 class DiscountRepository
 {
-    private function applyPivotCondition($query, $pivotTable, $discountTable, $fieldName, $value, $isColumn = false)
+    private function applyPivotCondition($query, $pivot_table, $discount_table, $field_name, $value, $is_column = false)
     {
-        $query->orWhereExists(function ($q) use ($pivotTable, $discountTable, $fieldName, $value, $isColumn) {
-            $q->from($pivotTable)
-                ->whereColumn('parent_id', $discountTable . '.id')
-                ->where('field_name', $fieldName);
+        $query->orWhereExists(function ($q) use ($pivot_table, $discount_table, $field_name, $value, $is_column) {
+            $q->from($pivot_table)
+                ->whereColumn('parent_id', $discount_table . '.id')
+                ->where('field_name', $field_name);
 
-            if ($isColumn) {
+            if ($is_column) {
                 $q->whereColumn('relation_id', $value);
             } else {
                 $q->where('relation_id', $value);
@@ -22,22 +22,22 @@ class DiscountRepository
         });
     }
 
-    public function getBestDiscountForBook($bookId, $genreId, $publisherId)
+    public function getBestDiscountForBook($book_id, $genre_id, $publisher_id)
     {
-        $discountModel = StreamRecord::inSection('Catalog\Discount')->getModel();
-        $discountTable = $discountModel->getTable();
-        $pivotTable = $discountModel->books()->getTable();
+        $discount_model = StreamRecord::inSection('Catalog\Discount')->getModel();
+        $discount_table = $discount_model->getTable();
+        $pivot_table = $discount_model->books()->getTable();
 
         return StreamRecord::inSection('Catalog\Discount')
-            ->where(function ($query) use ($pivotTable, $discountTable, $bookId, $genreId, $publisherId) {
-                if ($bookId)
-                    $this->applyPivotCondition($query, $pivotTable, $discountTable, 'books', $bookId);
+            ->where(function ($query) use ($pivot_table, $discount_table, $book_id, $genre_id, $publisher_id) {
+                if ($book_id)
+                    $this->applyPivotCondition($query, $pivot_table, $discount_table, 'books', $book_id);
 
-                if ($genreId)
-                    $this->applyPivotCondition($query, $pivotTable, $discountTable, 'genres', $genreId);
+                if ($genre_id)
+                    $this->applyPivotCondition($query, $pivot_table, $discount_table, 'genres', $genre_id);
 
-                if ($publisherId)
-                    $this->applyPivotCondition($query, $pivotTable, $discountTable, 'publishers', $publisherId);
+                if ($publisher_id)
+                    $this->applyPivotCondition($query, $pivot_table, $discount_table, 'publishers', $publisher_id);
 
             })
             ->selectRaw("
@@ -48,38 +48,38 @@ class DiscountRepository
             ->first();
     }
 
-    public function getAffectedBooksWithDiscounts($discountModel, $bookIds, $genreIds, $publisherIds)
+    public function getAffectedBooksWithDiscounts($discount_model, $book_ids, $genre_ids, $publisher_ids)
     {
-        $discountTable = $discountModel->getTable();
-        $pivotTable = $discountModel->books()->getTable();
-        $bookTable = EntryRecord::inSection('Catalog\Book')->getModel()->getTable();
+        $discount_table = $discount_model->getTable();
+        $pivot_table = $discount_model->books()->getTable();
+        $book_table = EntryRecord::inSection('Catalog\Book')->getModel()->getTable();
 
-        $discountSubquery = StreamRecord::inSection('Catalog\Discount')
-            ->where(function ($query) use ($pivotTable, $discountTable, $bookTable) {
-                $this->applyPivotCondition($query, $pivotTable, $discountTable, 'books', $bookTable . '.id', true);
-                $this->applyPivotCondition($query, $pivotTable, $discountTable, 'genres', $bookTable . '.genre_id', true);
-                $this->applyPivotCondition($query, $pivotTable, $discountTable, 'publishers', $bookTable . '.publisher_id', true);
+        $discount_subquery = StreamRecord::inSection('Catalog\Discount')
+            ->where(function ($query) use ($pivot_table, $discount_table, $book_table) {
+                $this->applyPivotCondition($query, $pivot_table, $discount_table, 'books', $book_table . '.id', true);
+                $this->applyPivotCondition($query, $pivot_table, $discount_table, 'genres', $book_table . '.genre_id', true);
+                $this->applyPivotCondition($query, $pivot_table, $discount_table, 'publishers', $book_table . '.publisher_id', true);
             });
 
-        $affectedBooksQuery = EntryRecord::inSection('Catalog\Book')
-            ->select("$bookTable.*")
+        $affected_books_query = EntryRecord::inSection('Catalog\Book')
+            ->select("$book_table.*")
             ->selectSub(
-                (clone $discountSubquery)->where('content_group', 'percentage')->reorder()->selectRaw('MAX(discount_pct)'),
+                (clone $discount_subquery)->where('content_group', 'percentage')->reorder()->selectRaw('MAX(discount_pct)'),
                 'max_pct'
             )
             ->selectSub(
-                (clone $discountSubquery)->where('content_group', 'fixed_amount')->reorder()->selectRaw('MIN(discount_num)'),
+                (clone $discount_subquery)->where('content_group', 'fixed_amount')->reorder()->selectRaw('MIN(discount_num)'),
                 'min_price'
             )
-            ->where(function ($q) use ($bookIds, $genreIds, $publisherIds) {
-                if ($bookIds->isNotEmpty())
-                    $q->orWhereIn('id', $bookIds);
-                if ($genreIds->isNotEmpty())
-                    $q->orWhereIn('genre_id', $genreIds);
-                if ($publisherIds->isNotEmpty())
-                    $q->orWhereIn('publisher_id', $publisherIds);
+            ->where(function ($q) use ($book_ids, $genre_ids, $publisher_ids) {
+                if ($book_ids->isNotEmpty())
+                    $q->orWhereIn('id', $book_ids);
+                if ($genre_ids->isNotEmpty())
+                    $q->orWhereIn('genre_id', $genre_ids);
+                if ($publisher_ids->isNotEmpty())
+                    $q->orWhereIn('publisher_id', $publisher_ids);
             });
 
-        return $affectedBooksQuery->get();
+        return $affected_books_query->get();
     }
 }
