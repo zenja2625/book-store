@@ -8,18 +8,32 @@ handle = "Catalog\Genre"
 [collection books]
 handle = "Catalog\Book"
 ==
-{% if this.param.slug is empty %}
-    {% set genre = genres.first() %}
-{% else %}
-    {% set genre = genres.where('slug', this.param.slug).first() %}
-    {% if genre is empty %}
-        {% do abort(404) %}
-    {% endif %}
+<?php
+function onEnd() {
+    $slug = $this->param('slug');
+    if ($slug) {
+        $genre = $this->genres->where('slug', $slug)->first();
+    } else {
+        $genre = $this->genres->first();
+    }
+
+    if ($genre) {
+        $this->page->meta_title = 'Каталог: ' . $genre->title;
+        $this->page->meta_description = $genre->meta_description;
+    }
+    
+    // Передаем готовый жанр в Twig
+    $this['genre'] = $genre;
+}
+?>
+==
+{% if genre is empty %}
+    {% do abort(404) %}
 {% endif %}
 
-{% set books = books.where('genre_id', genre.id).paginate(8) %}
+{% set catalog_books = books.where('genre_id', genre.id).paginate(8) %}
 
-{% if books.isEmpty() %}
+{% if catalog_books.isEmpty() %}
     {% do abort(404) %}
 {% endif %}
 
@@ -33,7 +47,7 @@ handle = "Catalog\Book"
         <div class="col-lg-8" >
             {% partial 'section' title='Каталог книг' level=2 title_class='text-center' body %}
                 <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-                    {% for book in books %}
+                    {% for book in catalog_books %}
                         <div class="col">
                             {% partial 'book' book=book %}
                         </div>
@@ -41,7 +55,7 @@ handle = "Catalog\Book"
                 </div>
 
                 <div class="mt-5 d-flex justify-content-center">
-                    {{ pager(books) }}
+                    {{ pager(catalog_books) }}
                 </div>
             {% endpartial %}
         </div>
