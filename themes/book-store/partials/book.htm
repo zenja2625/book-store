@@ -18,7 +18,7 @@
         {% endif %}
       </div>
 
-      <div id="add-book-{{ book.id }}">{% partial 'cart::book-button' id=book.id %}</div>
+      <div id="add-book-{{ book.id }}">{% partial 'cart::book-button' id=book.id is_out_of_stock=(book.stock_qty == 0) %}</div>
     </div>
   </div>
 </div>

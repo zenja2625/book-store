@@ -12,6 +12,18 @@ handle = "Catalog\Book"
 {% endif %}
 
 <div class="container-xxl mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{{ 'main'|page }}" class="text-decoration-none text-body-secondary">Главная</a></li>
+            {% if book.genre %}
+                <li class="breadcrumb-item">
+                    <a href="{{ 'catalog'|page({ slug: book.genre.slug }) }}" class="text-decoration-none text-body-secondary">{{ book.genre.title }}</a>
+                </li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ book.title }}</li>
+        </ol>
+    </nav>
+
     <div class="row g-5">
         <div class="col-12 col-md-4 col-lg-3">
             {% partial 'book-cover' book=book %}
@@ -37,10 +49,10 @@ handle = "Catalog\Book"
                         <div>{{ book.publisher_year }}</div>
                     </div>
                 {% endif %}
-                {% if book.genre.count() > 0 %}
+                {% if book.genre %}
                     <div class="col">
                         <div class="text-body-secondary small">Жанр</div>
-                        <div>{{ book.genre.first().title }}</div>
+                        <div>{{ book.genre.title }}</div>
                     </div>
                 {% endif %}
             </div>
@@ -67,7 +79,7 @@ handle = "Catalog\Book"
                 {% endif %}
 
                 <div id="add-book-{{ book.id }}">
-                    {% partial 'cart::book-button' id=book.id %}
+                    {% partial 'cart::book-button' id=book.id is_out_of_stock=(book.stock_qty == 0) %}
                 </div>
             </div>
         </div>
