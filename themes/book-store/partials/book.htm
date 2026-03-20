@@ -12,9 +12,9 @@
       <div class="mb-3">
         {% if book.current_price != book.price %}
           <span class="text-decoration-line-through text-body-secondary me-2">{{ book.price|currency }}</span>
-          <span class="fw-bold text-primary fs-5">{{ book.current_price|currency }}</span>
+          <span class="fw-bold text-primary fs-6">{{ book.current_price|currency }}</span>
         {% else %}
-          <span class="fw-bold text-primary fs-5">{{ book.price|currency }}</span>
+          <span class="fw-bold text-primary fs-6">{{ book.price|currency }}</span>
         {% endif %}
       </div>
 
