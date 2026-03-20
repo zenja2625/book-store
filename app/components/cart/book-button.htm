@@ -1,7 +1,7 @@
 {% set btnClasses = 'btn fw-bold w-100 rounded-0' %}
 {% if is_out_of_stock %}
 <button disabled class="{{ btnClasses }} btn-secondary">Нет на складе</button>
-{% elseif id in __SELF__.cartMap|keys %}
+{% elseif id in __SELF__.cart_map|keys %}
 <a href="{{ 'cart'|page }}" class="{{ btnClasses }} btn-success">Оформить</a>
 {% else %}
 <button data-request="onAddToCart" data-attach-loading data-request-data="id: {{ id }}"
